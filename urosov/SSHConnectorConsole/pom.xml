@@ -10,6 +10,7 @@
 
     <properties>
         <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
+        <jsch.version>0.1.53</jsch.version>
     </properties>
 
     <build>
@@ -27,5 +28,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
