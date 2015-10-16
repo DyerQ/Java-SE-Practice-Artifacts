@@ -2,8 +2,11 @@ package com.netcracker.edu;
 
 import com.jcraft.jsch.*;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.BitSet;
 
 public class Main {
     private static final String DEFAULT_HOST = "localhost";
@@ -14,9 +17,16 @@ public class Main {
         ChannelExec channel = null;
 
         try {
-            session = connectJSch(args);
-            // TODO Wrap into a cycle: read from console until it is an "exit"
-            printExecResult(getExecChannel(session), /*command*/ "uname", System.out);
+            session = connectJSch(args[0]);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+            String command;
+            while (!(command = reader.readLine()).equals("exit")) {
+                if (!command.isEmpty()) {
+                    printExecResult(getExecChannel(session), /*command*/ command, System.out);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -25,21 +35,28 @@ public class Main {
             }
         }
     }
+    private static Session connectJSch(String accessString) throws JSchException {
+        if (!accessString.matches("^[^/@:]+/[^/@:]+@[^/@:]+(:\\d+)?$")) { // TODO rewrite
+            throw new IllegalArgumentException("Entered access string must be formatted as following: " +
+                    "username[/password]@host[:port]");
+        }
 
-    private static Session connectJSch(String... accessString) throws JSchException {
-        // TODO parse accessString: username/password@host:port <- with probable exclusions
-        String username = "vasiliy"; // These are my local credentials
-        String password = "netcracker";
-        String host = "192.168.0.107";
-        int port = 22;
+        int usernameEndIndex = accessString.contains("/") ? accessString.indexOf('/') : accessString.indexOf('@');
+        String username = accessString.substring(0, usernameEndIndex);
+        String password = accessString.contains("/") ? accessString.substring(accessString.indexOf('/') + 1, accessString.indexOf('@')) : "";
+        if (!accessString.contains(":")) {
+            accessString = accessString + ":" + DEFAULT_PORT;
+        }
+        String host = accessString.substring(accessString.indexOf('@') + 1, accessString.indexOf(':'));
+        int port = Integer.parseInt(accessString.substring(accessString.indexOf(':') + 1));
 
         JSch jSch = new JSch();
         Session session = jSch.getSession(username, host, port);
 
-        if (password != null && !password.isEmpty()) {
+        if (!password.isEmpty()) {
             session.setPassword(password);
         }
-        UserInfo userInfo = new LocalUserInfo(); // TODO check impact of this string
+        UserInfo userInfo = new LocalUserInfo();
         session.setUserInfo(userInfo);
         session.connect();
 
@@ -70,9 +87,7 @@ public class Main {
                 destination.print(new String(tmp, 0, i));
             }
 
-            // TODO Figure out what these do
             if (channel.isClosed()) {
-                destination.println("exit-status: " + channel.getExitStatus());
                 break;
             }
             Thread.sleep(100);

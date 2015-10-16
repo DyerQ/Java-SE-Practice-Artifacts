@@ -2,8 +2,8 @@ package com.netcracker.edu;
 
 import com.jcraft.jsch.UserInfo;
 
-class LocalUserInfo implements UserInfo {
-    // TODO Describe
+class LocalUserInfo implements UserInfo { // This class is a container of connection settings
+
     public String getPassword() {
         return null;
     }
