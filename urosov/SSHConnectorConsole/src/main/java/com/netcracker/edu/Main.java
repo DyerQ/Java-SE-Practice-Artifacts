@@ -6,15 +6,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.BitSet;
 
 public class Main {
-    private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 22;
 
     public static void main(String[] args) {
         Session session = null;
-        ChannelExec channel = null;
 
         try {
             session = connectJSch(args[0]);
