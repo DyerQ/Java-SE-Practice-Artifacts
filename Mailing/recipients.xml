@@ -1,0 +1,16 @@
+<?xml version = "1.0"?>
+<business-cards>
+    <business-card>
+        <mail>vasiliy.urosov@phystech.edu</mail>
+        <properties>
+            <property>
+                <name>full-name</name>
+                <value>Vasily Urosov</value>
+            </property>
+            <property>
+                <name>university</name>
+                <value>MIPT</value>
+            </property>
+        </properties>
+    </business-card>
+</business-cards>
