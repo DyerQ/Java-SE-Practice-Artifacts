@@ -2,15 +2,17 @@
 <business-cards>
     <business-card>
         <mail>vasiliy.urosov@phystech.edu</mail>
-        <properties>
-            <property>
-                <name>full-name</name>
-                <value>Vasily Urosov</value>
-            </property>
-            <property>
-                <name>university</name>
-                <value>MIPT</value>
-            </property>
-        </properties>
+        <full-name>Vasily Urosov</full-name>
+        <university>MIPT</university>
+    </business-card>
+    <business-card>
+        <mail>tvere@phystech.edu</mail>
+        <full-name>Mikhail Tvere</full-name>
+        <university>MIPT</university>
+    </business-card>
+    <business-card>
+        <mail>peacock@phystech.edu</mail>
+        <full-name>Pavlin Peacock</full-name>
+        <university>MIPT</university>
     </business-card>
 </business-cards>
