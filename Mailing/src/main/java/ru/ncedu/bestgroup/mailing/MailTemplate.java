@@ -6,15 +6,19 @@ import java.util.regex.Pattern;
 
 public class MailTemplate {
     private String body;
-    public MailTemplate(String body){
+    private String subject;
+    public MailTemplate(String body, String subject){
         this.body = body;
+        this.subject = subject;
     }
     public String getBody() {
         return body;
     }
+    public String getSubject(){
+        return subject;
+    }
 
     public Mail getMail(BusinessCard card, Properties defaultProperties) {
-
 
         for (String s: defaultProperties.stringPropertyNames()){
             String  replacement = defaultProperties.getProperty(card.getProperty(s));
