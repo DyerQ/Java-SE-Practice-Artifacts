@@ -1,7 +1,6 @@
 package ru.ncedu.bestgroup.mailing;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class BusinessCard {
@@ -35,5 +34,8 @@ public class BusinessCard {
 
     public String getProperty(String key) {
         return properties.get(key);
+    }
+    public Set<String> getKeySet(){
+        return properties.keySet();
     }
 }
