@@ -47,33 +47,32 @@ public class XMLUtils {
     }
 
     public static Set<BusinessCard> parseBusinessCards(Document element) {
-        try {
-            element.normalize();
-            NodeList nList = element.getElementsByTagName("business-card");
-            Set<BusinessCard> set = new LinkedHashSet<BusinessCard>();
-            BusinessCard[] businessCards = new BusinessCard[nList.getLength()];
-            for (int temp = 0; temp < nList.getLength(); temp++) {
+        NodeList nodeList = element.getElementsByTagName("business-card");
+        Set<BusinessCard> set = new LinkedHashSet<BusinessCard>();
+        BusinessCard[] businessCards = new BusinessCard[nodeList.getLength()];
+        int length = nodeList.getLength();
 
+        for (int i = 0; i < length; ++i) {
+            Element el = (Element) nodeList.item(i);
+            String mail = el.getElementsByTagName("mail").item(0).getTextContent();
+            NodeList list = el.getElementsByTagName("property");
+            Map<String, String> properties = new LinkedHashMap<String, String>();
 
-                Node nNode = nList.item(temp);
+            for (int j = 0; j < list.getLength(); j++) {
+                Node nNode = list.item(j);
 
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
-                    String mail = eElement.getElementsByTagName("mail").item(0).getTextContent();
-                    String fullName = eElement.getElementsByTagName("full-name").item(0).getTextContent();
-                    String university = eElement.getElementsByTagName("university").item(0).getTextContent();
-                    Map<String, String> properties = new HashMap<String, String>();
-                    properties.put("full-name", fullName);
-                    properties.put("university", university);
-                    businessCards[temp] = new BusinessCard(mail, properties);
+                    String name = eElement.getElementsByTagName("name").item(0).getTextContent();
+                    String value = eElement.getElementsByTagName("value").item(0).getTextContent();
+                    properties.put(name, value);
                 }
+                businessCards[i] = new BusinessCard(mail, properties);
+
             }
-            Collections.addAll(set, businessCards);
-            return set;
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return null;
+        Collections.addAll(set, businessCards);
+        return set;
     }
 
     public static Document convertBusinessCards(Set<BusinessCard> businessCards) {
@@ -90,17 +89,27 @@ public class XMLUtils {
 
             for (BusinessCard e : businessCards) {
                 xMLStreamWriter.writeStartElement("business-card");
+
                 xMLStreamWriter.writeStartElement("mail");
                 xMLStreamWriter.writeCharacters(e.getMail());
                 xMLStreamWriter.writeEndElement();
-                xMLStreamWriter.writeStartElement("full-name");
-                xMLStreamWriter.writeCharacters(e.getProperty("full-name"));
-                xMLStreamWriter.writeEndElement();
-                xMLStreamWriter.writeStartElement("university");
-                xMLStreamWriter.writeCharacters(e.getProperty("university"));
-                xMLStreamWriter.writeEndElement();
-                xMLStreamWriter.writeEndElement();
 
+                xMLStreamWriter.writeStartElement("properties");
+                for (String i : e.getKeySet()) {
+                    xMLStreamWriter.writeStartElement("property");
+
+                    xMLStreamWriter.writeStartElement("name");
+                    xMLStreamWriter.writeCharacters(i);
+                    xMLStreamWriter.writeEndElement();
+
+                    xMLStreamWriter.writeStartElement("value");
+                    xMLStreamWriter.writeCharacters(e.getProperty(i));
+                    xMLStreamWriter.writeEndElement();
+
+                    xMLStreamWriter.writeEndElement();
+                }
+                xMLStreamWriter.writeEndElement();
+                xMLStreamWriter.writeEndElement();
             }
             xMLStreamWriter.writeEndElement();
             xMLStreamWriter.writeEndDocument();
@@ -110,17 +119,16 @@ public class XMLUtils {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder;
             builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new InputSource(new StringReader(stringWriter.getBuffer().toString())));
 
-            return doc;
+            return builder.parse(new InputSource(new StringReader(stringWriter.getBuffer().toString())));
 
-        } catch (XMLStreamException e) {
+        } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
         } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
             e.printStackTrace();
         }
 
