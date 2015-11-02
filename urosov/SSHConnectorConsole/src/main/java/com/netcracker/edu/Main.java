@@ -2,10 +2,7 @@ package com.netcracker.edu;
 
 import com.jcraft.jsch.*;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 
 public class Main {
     private static final int DEFAULT_PORT = 22;
@@ -32,6 +29,7 @@ public class Main {
             }
         }
     }
+
     private static Session connectJSch(String accessString) throws JSchException {
         if (!accessString.matches("^[^/@:]+/[^/@:]+@[^/@:]+(:\\d+)?$")) { // TODO rewrite
             throw new IllegalArgumentException("Entered access string must be formatted as following: " +
@@ -71,18 +69,14 @@ public class Main {
 
     private static void printExecResult(ChannelExec channel, String command, PrintStream destination) throws Exception {
         channel.setCommand(command);
+        InputStream err = channel.getErrStream();
         InputStream in = channel.getInputStream();
         channel.connect();
 
-        byte[] tmp = new byte[1024];
+
         while (true) {
-            while (in.available() > 0) {
-                int i = in.read(tmp, 0, 1024);
-                if (i < 0) {
-                    break;
-                }
-                destination.print(new String(tmp, 0, i));
-            }
+            redirectInputStream(in, destination);
+            redirectInputStream(err, destination);
 
             if (channel.isClosed()) {
                 break;
@@ -91,5 +85,16 @@ public class Main {
         }
 
         channel.disconnect();
+    }
+
+    private static void redirectInputStream(InputStream from, PrintStream to) throws IOException {
+        while (from.available() > 0) {
+            byte[] tmp = new byte[1024];
+            int i = from.read(tmp, 0, 1024);
+            if (i < 0) {
+                break;
+            }
+            to.print(new String(tmp, 0, i));
+        }
     }
 }
