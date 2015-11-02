@@ -12,7 +12,7 @@ public class MailTemplateParser implements Callable<Collection<MailTemplate>> {
     @Override
     public Collection<MailTemplate> call() throws Exception {
         File mailTemplateFolder = new File("./mail-templates");
-       // ArrayList<File> allFile = new ArrayList<File>();
+
         if (mailTemplateFolder.isDirectory()){
             Collection<MailTemplate> result = new ArrayList<MailTemplate>();
             for (File f: mailTemplateFolder.listFiles()){
@@ -30,9 +30,6 @@ public class MailTemplateParser implements Callable<Collection<MailTemplate>> {
         }
         return text.toString();
     }
-    /*private String subjectRead(File f){
-        f.getName();
-        return null;
-    }*/
+
 }
 

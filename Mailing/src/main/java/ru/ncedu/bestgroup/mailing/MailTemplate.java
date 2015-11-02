@@ -15,7 +15,7 @@ public class MailTemplate {
         return body;
     }
     public String getSubject(){
-        return subject;
+        return subject;         //comment for commit
     }
 
     public Mail getMail(BusinessCard card, Properties defaultProperties) {
