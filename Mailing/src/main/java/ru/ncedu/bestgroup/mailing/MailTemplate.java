@@ -21,12 +21,15 @@ public class MailTemplate {
     }
 
     public Mail getMail(BusinessCard card, Properties defaultProperties) {
-
-        for (String s : defaultProperties.stringPropertyNames()) {
-            String replacement = defaultProperties.getProperty(card.getProperty(s));
+        for (String s : card.getKeySet()) {
+            String replacement = card.getProperty(card.getProperty(s));
             body = body.replaceAll("#\\{" + s + "\\}", replacement);
         }
-        return new Mail(card.getMail(), body);
+        for (String s : defaultProperties.stringPropertyNames()) {
+            String replacement = defaultProperties.getProperty(defaultProperties.getProperty(s));
+            body = body.replaceAll("#\\{" + s + "\\}", replacement);
+        }
+        return new Mail(card.getMail(), body, subject);
     }
 }
 
