@@ -22,28 +22,20 @@ import javax.xml.stream.XMLStreamWriter;
 
 public class XMLUtils {
 
-    public static Document readFromFile(String fileName) {
+    public static Document readFromFile(String fileName) throws ParserConfigurationException, IOException, SAXException {
         Document doc = null;
-        try {
-            doc = getDocumentBuilder().parse(fileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        doc = getDocumentBuilder().parse(fileName);
         return doc;
     }
 
 
-    private static DocumentBuilder getDocumentBuilder() throws Exception {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setIgnoringComments(true);
-            dbf.setCoalescing(true);
-            dbf.setIgnoringElementContentWhitespace(true);
-            dbf.setValidating(false);
-            return dbf.newDocumentBuilder();
-        } catch (Exception exc) {
-            throw new Exception(exc.getMessage());
-        }
+    private static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setIgnoringComments(true);
+        dbf.setCoalescing(true);
+        dbf.setIgnoringElementContentWhitespace(true);
+        dbf.setValidating(false);
+        return dbf.newDocumentBuilder();
     }
 
     public static Set<BusinessCard> parseBusinessCards(Document element) {
@@ -75,78 +67,60 @@ public class XMLUtils {
         return set;
     }
 
-    public static Document convertBusinessCards(Set<BusinessCard> businessCards) {
+    public static Document convertBusinessCards(Set<BusinessCard> businessCards) throws IOException, SAXException, XMLStreamException, ParserConfigurationException {
 
-        try {
+        StringWriter stringWriter = new StringWriter();
 
-            StringWriter stringWriter = new StringWriter();
+        XMLOutputFactory xMLOutputFactory = XMLOutputFactory.newInstance();
+        XMLStreamWriter xMLStreamWriter = xMLOutputFactory.createXMLStreamWriter(stringWriter);
 
-            XMLOutputFactory xMLOutputFactory = XMLOutputFactory.newInstance();
-            XMLStreamWriter xMLStreamWriter = xMLOutputFactory.createXMLStreamWriter(stringWriter);
+        xMLStreamWriter.writeStartDocument();
+        xMLStreamWriter.writeStartElement("business-cards");
 
-            xMLStreamWriter.writeStartDocument();
-            xMLStreamWriter.writeStartElement("business-cards");
+        for (BusinessCard e : businessCards) {
+            xMLStreamWriter.writeStartElement("business-card");
 
-            for (BusinessCard e : businessCards) {
-                xMLStreamWriter.writeStartElement("business-card");
+            xMLStreamWriter.writeStartElement("mail");
+            xMLStreamWriter.writeCharacters(e.getMail());
+            xMLStreamWriter.writeEndElement();
 
-                xMLStreamWriter.writeStartElement("mail");
-                xMLStreamWriter.writeCharacters(e.getMail());
+            xMLStreamWriter.writeStartElement("properties");
+            for (String i : e.getKeySet()) {
+                xMLStreamWriter.writeStartElement("property");
+
+                xMLStreamWriter.writeStartElement("name");
+                xMLStreamWriter.writeCharacters(i);
                 xMLStreamWriter.writeEndElement();
 
-                xMLStreamWriter.writeStartElement("properties");
-                for (String i : e.getKeySet()) {
-                    xMLStreamWriter.writeStartElement("property");
-
-                    xMLStreamWriter.writeStartElement("name");
-                    xMLStreamWriter.writeCharacters(i);
-                    xMLStreamWriter.writeEndElement();
-
-                    xMLStreamWriter.writeStartElement("value");
-                    xMLStreamWriter.writeCharacters(e.getProperty(i));
-                    xMLStreamWriter.writeEndElement();
-
-                    xMLStreamWriter.writeEndElement();
-                }
+                xMLStreamWriter.writeStartElement("value");
+                xMLStreamWriter.writeCharacters(e.getProperty(i));
                 xMLStreamWriter.writeEndElement();
+
                 xMLStreamWriter.writeEndElement();
             }
             xMLStreamWriter.writeEndElement();
-            xMLStreamWriter.writeEndDocument();
-            xMLStreamWriter.flush();
-            xMLStreamWriter.close();
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder;
-            builder = factory.newDocumentBuilder();
-
-            return builder.parse(new InputSource(new StringReader(stringWriter.getBuffer().toString())));
-
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
+            xMLStreamWriter.writeEndElement();
         }
+        xMLStreamWriter.writeEndElement();
+        xMLStreamWriter.writeEndDocument();
+        xMLStreamWriter.flush();
+        xMLStreamWriter.close();
 
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        builder = factory.newDocumentBuilder();
 
-        return null;
+        return builder.parse(new InputSource(new StringReader(stringWriter.getBuffer().toString())));
+
     }
 
-    public static boolean writeToFile(Document document, String fileName) {
-        try {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            Result output = new StreamResult(new File(fileName));
-            Source input = new DOMSource(document);
-            transformer.transform(input, output);
-            return true;
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
+    public static boolean writeToFile(Document document, String fileName) throws TransformerException {
 
-        return false; // returns false on unsuccessful write
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        Result output = new StreamResult(new File(fileName));
+        Source input = new DOMSource(document);
+        transformer.transform(input, output);
+        return true;
+
     }
 }
