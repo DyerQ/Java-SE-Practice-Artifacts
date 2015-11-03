@@ -1,4 +1,4 @@
-package ru.ncedu.bestgroup.mailing;
+package ru.ncedu.bestgroup.mailing.model;
 
 import java.util.*;
 

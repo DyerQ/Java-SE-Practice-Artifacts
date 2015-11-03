@@ -1,4 +1,4 @@
-package ru.ncedu.bestgroup.mailing;
+package ru.ncedu.bestgroup.mailing.utils;
 
 import java.io.*;
 import java.util.*;
@@ -15,6 +15,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import ru.ncedu.bestgroup.mailing.model.BusinessCard;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;

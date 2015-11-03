@@ -1,5 +1,9 @@
 package ru.ncedu.bestgroup.mailing;
 
+import ru.ncedu.bestgroup.mailing.model.BusinessCard;
+import ru.ncedu.bestgroup.mailing.model.Mail;
+import ru.ncedu.bestgroup.mailing.model.MailTemplate;
+
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 

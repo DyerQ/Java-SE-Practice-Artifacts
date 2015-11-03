@@ -1,6 +1,6 @@
 package ru.ncedu.bestgroup.mailing.parsing;
 
-import ru.ncedu.bestgroup.mailing.MailTemplate;
+import ru.ncedu.bestgroup.mailing.model.MailTemplate;
 
 import java.io.BufferedReader;
 import java.io.File;

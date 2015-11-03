@@ -1,4 +1,4 @@
-package ru.ncedu.bestgroup.mailing;
+package ru.ncedu.bestgroup.mailing.model;
 
 public class Mail {
     private String to;
