@@ -121,6 +121,5 @@ public class XMLUtils {
         Source input = new DOMSource(document);
         transformer.transform(input, output);
         return true;
-
     }
 }
