@@ -18,8 +18,7 @@ public class BusinessCard {
     @Override
     public boolean equals(Object o) {
 
-        if (this == o) return true;
-        return !(o == null || getClass() != o.getClass()) && mail.equals(((BusinessCard) o).getMail());
+        return this == o || !(o == null || getClass() != o.getClass()) && mail.equals(((BusinessCard) o).getMail());
 
     }
 
