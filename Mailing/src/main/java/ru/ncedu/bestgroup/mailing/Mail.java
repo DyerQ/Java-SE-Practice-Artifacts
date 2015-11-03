@@ -3,10 +3,16 @@ package ru.ncedu.bestgroup.mailing;
 public class Mail {
     private String to;
     private String body;
+    private String subject;
 
-    public Mail(String to, String body) {
+    public String getSubject() {
+        return subject;
+    }
+
+    public Mail(String to, String body, String subject) {
         this.to = to;
         this.body = body;
+        this.subject = subject;
     }
 
     public String getTo() {
