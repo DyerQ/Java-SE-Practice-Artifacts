@@ -24,8 +24,6 @@ public class MailProducer {
     }
 
     public void enqueueMail(Collection<Mail> mails) throws Exception {
-        for (Mail mail : mails) {
-            queue.add(mail);
-        }
+        queue.addAll(mails);
     }
 }
