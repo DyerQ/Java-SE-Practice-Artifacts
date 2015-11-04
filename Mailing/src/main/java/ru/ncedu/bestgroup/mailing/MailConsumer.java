@@ -1,12 +1,12 @@
 package ru.ncedu.bestgroup.mailing;
 
+import org.apache.commons.mail.*;
+import ru.ncedu.bestgroup.mailing.model.Mail;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
-
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.HtmlEmail;
 
 public class MailConsumer {
     private BlockingQueue<Mail> queue;
@@ -16,7 +16,7 @@ public class MailConsumer {
     }
 
     public Collection<Mail> consumeMail() throws InterruptedException {
-        Set<Mail> mailSet = new LinkedHashSet();
+        Set<Mail> mailSet = new LinkedHashSet<Mail>();
         for(Mail e:queue) {
             mailSet.add(e);
         }
@@ -26,12 +26,16 @@ public class MailConsumer {
     public void sendAllMail(Collection<Mail> mailCollection) throws EmailException {
         for (Mail e:mailCollection){
             HtmlEmail email = new HtmlEmail();
-            email.setHostName("");
+            email.setHostName("smtp.gmail.com");
+            email.setSmtpPort(465);
+            email.setSSLOnConnect(true);
+            email.setAuthenticator(new DefaultAuthenticator("testing.bestgroup","bestgroup"));
             email.addTo(e.getTo());
-            email.setFrom("");
-            email.setSubject(e.);
+            email.setFrom("testing.bestgroup@gmail.com");
+            email.setSubject(e.getSubject());
             email.setTextMsg(e.getBody());
             email.send();
+
         }
     }
 }
