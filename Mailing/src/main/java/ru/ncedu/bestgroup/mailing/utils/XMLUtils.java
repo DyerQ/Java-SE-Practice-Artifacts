@@ -22,6 +22,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 public class XMLUtils {
+    private final static String BUSINESS_CARD_TAG = "business-card";
+    private final static String BUSINESS_CARDS_TAG = "business-cards";
+    private final static String MAIL = "mail";
+    private final static String PROPERTY = "property";
+    private final static String PROPERTYIES = "properties";
+    private final static String NAME = "name";
+    private final static String VALUE = "value";
+
 
     public static Document readFromFile(String fileName) {
         Document doc = null;
@@ -50,15 +58,15 @@ public class XMLUtils {
     }
 
     public static Set<BusinessCard> parseBusinessCards(Document element) {
-        NodeList nodeList = element.getElementsByTagName("business-card");
+        NodeList nodeList = element.getElementsByTagName(BUSINESS_CARD_TAG);
         Set<BusinessCard> set = new LinkedHashSet<BusinessCard>();
         BusinessCard[] businessCards = new BusinessCard[nodeList.getLength()];
         int length = nodeList.getLength();
 
         for (int i = 0; i < length; ++i) {
             Element el = (Element) nodeList.item(i);
-            String mail = el.getElementsByTagName("mail").item(0).getTextContent();
-            NodeList list = el.getElementsByTagName("property");
+            NodeList list = el.getElementsByTagName(PROPERTY);
+            String mail = el.getElementsByTagName(MAIL).item(0).getTextContent();
             Map<String, String> properties = new LinkedHashMap<String, String>();
 
             for (int j = 0; j < list.getLength(); j++) {
@@ -66,13 +74,12 @@ public class XMLUtils {
 
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
-                    String name = eElement.getElementsByTagName("name").item(0).getTextContent();
-                    String value = eElement.getElementsByTagName("value").item(0).getTextContent();
+                    String name = eElement.getElementsByTagName(NAME).item(0).getTextContent();
+                    String value = eElement.getElementsByTagName(VALUE).item(0).getTextContent();
                     properties.put(name, value);
                 }
-                businessCards[i] = new BusinessCard(mail, properties);
-
             }
+            businessCards[i] = new BusinessCard(mail, properties);
         }
         Collections.addAll(set, businessCards);
         return set;
@@ -87,24 +94,24 @@ public class XMLUtils {
             XMLStreamWriter xMLStreamWriter = xMLOutputFactory.createXMLStreamWriter(stringWriter);
 
             xMLStreamWriter.writeStartDocument();
-            xMLStreamWriter.writeStartElement("business-cards");
+            xMLStreamWriter.writeStartElement(BUSINESS_CARDS_TAG);
 
             for (BusinessCard e : businessCards) {
-                xMLStreamWriter.writeStartElement("business-card");
+                xMLStreamWriter.writeStartElement(BUSINESS_CARD_TAG);
 
-                xMLStreamWriter.writeStartElement("mail");
+                xMLStreamWriter.writeStartElement(MAIL);
                 xMLStreamWriter.writeCharacters(e.getMail());
                 xMLStreamWriter.writeEndElement();
 
-                xMLStreamWriter.writeStartElement("properties");
+                xMLStreamWriter.writeStartElement(PROPERTYIES);
                 for (String i : e.getKeySet()) {
-                    xMLStreamWriter.writeStartElement("property");
+                    xMLStreamWriter.writeStartElement(PROPERTY);
 
-                    xMLStreamWriter.writeStartElement("name");
+                    xMLStreamWriter.writeStartElement(NAME);
                     xMLStreamWriter.writeCharacters(i);
                     xMLStreamWriter.writeEndElement();
 
-                    xMLStreamWriter.writeStartElement("value");
+                    xMLStreamWriter.writeStartElement(VALUE);
                     xMLStreamWriter.writeCharacters(e.getProperty(i));
                     xMLStreamWriter.writeEndElement();
 
