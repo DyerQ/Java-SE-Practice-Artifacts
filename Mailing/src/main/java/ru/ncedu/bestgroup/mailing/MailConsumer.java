@@ -10,6 +10,12 @@ import java.util.concurrent.BlockingQueue;
 
 public class MailConsumer {
     private BlockingQueue<Mail> queue;
+    private final static String HOST_NAME = "smtp.gmail.com";
+    private final static int SMTP_PORT = 465;
+    private final static String PASSWORD= "bestgroup";
+    private final static String LOGIN = "testing.bestgroup@gmail.com";
+
+
 
     public MailConsumer(BlockingQueue<Mail> queue) {
         this.queue = queue;
@@ -26,12 +32,12 @@ public class MailConsumer {
     public void sendAllMail(Collection<Mail> mailCollection) throws EmailException {
         for (Mail e:mailCollection){
             HtmlEmail email = new HtmlEmail();
-            email.setHostName("smtp.gmail.com");
-            email.setSmtpPort(465);
+            email.setHostName(HOST_NAME);
+            email.setSmtpPort(SMTP_PORT);
             email.setSSLOnConnect(true);
-            email.setAuthenticator(new DefaultAuthenticator("testing.bestgroup","bestgroup"));
+            email.setAuthenticator(new DefaultAuthenticator(LOGIN,PASSWORD));
             email.addTo(e.getTo());
-            email.setFrom("testing.bestgroup@gmail.com");
+            email.setFrom(LOGIN);
             email.setSubject(e.getSubject());
             email.setTextMsg(e.getBody());
             email.send();
