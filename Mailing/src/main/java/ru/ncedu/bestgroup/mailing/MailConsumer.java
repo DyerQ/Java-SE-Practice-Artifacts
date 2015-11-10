@@ -1,6 +1,8 @@
 package ru.ncedu.bestgroup.mailing;
 
 import org.apache.commons.mail.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.ncedu.bestgroup.mailing.model.Mail;
 
 import java.util.Collection;
@@ -9,6 +11,8 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 public class MailConsumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailConsumer.class);
+
     private BlockingQueue<Mail> queue;
     private final static String HOST_NAME = "smtp.gmail.com";
     private final static int SMTP_PORT = 465;
@@ -41,7 +45,7 @@ public class MailConsumer {
             email.setSubject(e.getSubject());
             email.setTextMsg(e.getBody());
             email.send();
-
+            LOGGER.info("Email to {} was sent",e.getTo());
         }
     }
 }
