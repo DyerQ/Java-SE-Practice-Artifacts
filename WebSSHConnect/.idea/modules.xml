@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/WebSSHConnect.iml" filepath="$PROJECT_DIR$/WebSSHConnect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebSSHConnect-ejb/WebSSHConnect-ejb.iml" filepath="$PROJECT_DIR$/WebSSHConnect-ejb/WebSSHConnect-ejb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebSSHConnect-web/WebSSHConnect-web.iml" filepath="$PROJECT_DIR$/WebSSHConnect-web/WebSSHConnect-web.iml" />
+    </modules>
+  </component>
+</project>
